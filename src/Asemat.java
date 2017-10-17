@@ -14,7 +14,8 @@ import static java.lang.Integer.parseInt;
 import static java.util.Collections.sort;
 
 /**
- * Created by Administrator on 17.10.2017.
+ * Created by Minna Vares on 17.10.2017.
+ * Tässä luokassa voidaan hakea asemittain saapuvia ja lähteviä junia. Luokka on vielä kesken
  */
 public class Asemat {
     public static void main(String[] args) {

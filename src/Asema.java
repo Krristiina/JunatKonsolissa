@@ -1,7 +1,9 @@
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * Created by Administrator on 17.10.2017.
+ * Created by Minna Vares on 17.10.2017.
+ * Tämä on asema luokka, jolla on muuttujina nimi, ja nimikoodi,
+ * käytetään Koodinmurtajaluokassa
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 
