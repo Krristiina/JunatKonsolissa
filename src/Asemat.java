@@ -1,13 +1,9 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.*;
 
 import static java.lang.Integer.parseInt;
@@ -19,8 +15,8 @@ import static java.util.Collections.sort;
  */
 public class Asemat {
     public static void main(String[] args) {
-        lahtevatJunatNyt("HKI");
-        saapuvatJunatNyt("HKI");
+        lahtevatJunatNyt("TPE");
+        saapuvatJunatNyt("JY");
     }
 
 
@@ -59,11 +55,14 @@ public class Asemat {
     }
 
     /*Tämä metodi palauttaa taulukkotulosteen tietyn
-        aseman saapuvista junista juuri tällä hetkellä*/
+        aseman saapuvista junista juuri tällä hetkellä
+        /live-trains/station/HKI?minutes_before_departure=15&minutes_after_departure=15&minutes_before_arrival=15&minutes_after_arrival=15
+        tai arrived_trains=0&arriving_trains=20&departed_trains=0&departing_trains=0&include_nonstopping=false
+*/
     public static void saapuvatJunatNyt(String asema){
-        System.out.println("Saapuvat junat asemalle"+ asema +  ": ");
+        System.out.println("Saapuvat junat asemalle "+ asema +  ": ");
         String asemaKoodi = asema;
-        String osoite = "/live-trains/station/" + asemaKoodi + "?arrived_trains=0&arriving_trains=20&departed_trains=0&departing_trains=0&include_nonstopping=false";
+        String osoite = "/live-trains/station/" + asemaKoodi + "?arrived_trains=20&arriving_trains=0&departed_trains=0&departing_trains=0&include_nonstopping=false";
         List<Juna> asemanJunat = lueAsemanJSONData(osoite);
         luoJunaTaulukko(asemanJunat, "Saapuu");
     }
@@ -76,13 +75,20 @@ public class Asemat {
         String junatyyppi;
         String maaranpaa;
         String raide;
-
-        for (int i = 0; i<20; i++) {
-            lahtoAika = asemanJunat.get(i).timeTableRows.get(0).scheduledTime;
+        int indeksi = 0;
+        Koodinmurtaja kaanna = new Koodinmurtaja();
+        for (int i = 0; i<asemanJunat.size(); i++) {
+            int loppu = asemanJunat.get(i).timeTableRows.size()-1;
+            if ("Saapuu".equals(lahtovaisaapuminen)){
+                indeksi = asemanJunat.get(i).timeTableRows.size()-1;
+                loppu = 0;
+            }
+            lahtoAika = asemanJunat.get(i).timeTableRows.get(indeksi).scheduledTime;
             DateFormat da = new SimpleDateFormat("HH:mm");
             junatyyppi = asemanJunat.get(i).getCommuterLineID();
             raide = asemanJunat.get(i).timeTableRows.get(0).commercialTrack;
-            maaranpaa = asemanJunat.get(i).timeTableRows.get(asemanJunat.get(i).timeTableRows.size()-1).stationShortCode;
+            maaranpaa = kaanna.murraKoodi(asemanJunat.get(i).timeTableRows.get(loppu).stationShortCode);
+
             StringBuilder tiedot = new StringBuilder();
             tiedot.append(da.format(lahtoAika));
             tiedot.append("\t\t");
@@ -94,7 +100,12 @@ public class Asemat {
 
             asematiedot.add(tiedot.toString());
         }
-        String otsikot = lahtovaisaapuminen+ "\tNro \traide \tpääteasema";
+        String paateasema = "Pääteasema";
+        if ("Saapuu".equals(lahtovaisaapuminen)){
+            paateasema = "\tLähtöasema";
+        }
+
+        String otsikot = lahtovaisaapuminen+ "   Nro \traide \t" + paateasema;
         String alaviiva = "____________________________________";
         Collections.sort(asematiedot);
         asematiedot.add(0, alaviiva);
