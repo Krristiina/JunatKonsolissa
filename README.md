@@ -1,0 +1,2 @@
+# JunatKonsolissa
+Miniprojekti/viikko4
