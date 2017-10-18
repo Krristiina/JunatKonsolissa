@@ -340,3 +340,4 @@ class Causes {
         this.detailedCategoryCodeId = detailedCategoryCodeId;
     }
 }
+
