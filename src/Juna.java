@@ -22,6 +22,9 @@ public class Juna {
     String trainType;
     long version;
     List<journeySections> journeySections; // luodaan uusi luokka journeySections (lisätietoa luokasta luokan kohdalla)
+    String detailedCause;
+
+
 
 
 
@@ -136,6 +139,14 @@ public class Juna {
 
     public void setVersion(long version) {
         this.version = version;
+    }
+
+    public String getDetailedCause(int i) {
+        return detailedCause;
+    }
+
+    public void setDetailedCause(String detailedCause) {
+        this.detailedCause = detailedCause;
     }
 
 }
@@ -256,6 +267,14 @@ class TimeTableRow {
         return differenceInMinutes;
     }
 
+    public List<Causes> getCauses() {
+        return causes;
+    }
+
+    public void setCauses(List<Causes> causes) {
+        this.causes = causes;
+    }
+
 
 }
 
@@ -338,6 +357,29 @@ class Causes {
     }
     public void setdetailedCategoryCodeId(int detailedCategoryCodeId) {
         this.detailedCategoryCodeId = detailedCategoryCodeId;
+    }
+}
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+class DetailedCauseLuokka {
+
+    int id;
+    String detailedCategoryName;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDetailedCategoryName() {
+        return detailedCategoryName;
+    }
+
+    public void setDetailedCategoryName(String detailedCategoryName) {
+        this.detailedCategoryName = detailedCategoryName;
     }
 }
 
